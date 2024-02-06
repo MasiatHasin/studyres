@@ -1,6 +1,8 @@
 <!-- templates/registration/register.html -->
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}Home - StudyRes{% endblock %}
 
 {% block header %}Home{% endblock %}
@@ -10,19 +12,60 @@
     <div class="col-md-8">
         <div class="card">
             <div class="card-header">
-                Search and Filter
+                Filter
             </div>
             <div class="card-body">
-                <!--<form method="post">
+                <form method="post">
                     {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="btn btn-primary">Register</button>
-                </form>-->
+                    <div class="row">
+                        <div class="col-6">
+                            {{ form.type|as_crispy_field }}
+                        </div>
+                        <div class="col-6">
+                            {{ form.course|as_crispy_field }}
+                        </div>
+                        <div class="col-6">
+                            {{ form.upvotes|as_crispy_field }}
+                        </div>
+                        <div class="col-6">
+                            {{ form.date|as_crispy_field }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="mt-2 btn btn-success">Post Resource</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
-        <div class="card mt-2">
+        <div class="card mt-4">
+            <div class="card-header">
+                All Resources
+            </div>
             <div class="card-body">
-                <a href="{% url 'post' %}">Post your own resource</a>
+                <table class="table text-center">
+                    <thead>
+                      <tr>
+                        <th>Poster</th>
+                        <th>Title</th>
+                        <th>Course</th>
+                        <th>Type</th>
+                        <th>Upvotes</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in all %}
+                      <tr>
+                        <td>{{i.user}}</td>
+                        <td>{{i.title}}</td>
+                        <td>{{i.course}}</td>
+                        <td>{{i.type}}</td>
+                        <td>{{i.upvotes}}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
             </div>
         </div>
     </div>

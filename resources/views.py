@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
+from django.contrib.auth import logout
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.template import loader
@@ -37,9 +38,10 @@ def login_view(request):
     return render(request, 'registration/login.html', {'form': form})
 
 @login_required(login_url='/studyres/login')
-def index(request):
-    template = loader.get_template("resources/home.html")
-    return HttpResponse(template.render(None,request))
+def logout_view(request):
+    logout(request)
+    # Redirect to a success page.
+    return redirect("/studyres/")
 
 @login_required(login_url='/studyres/login')
 def saveResource(request):
@@ -53,9 +55,10 @@ def saveResource(request):
             course_inp = form.cleaned_data['course']
             type_inp = form.cleaned_data['type']
             url_inp = form.cleaned_data['url']
+            semester = form.cleaned_data['semester']
             current_user = request.user
             user_id = current_user.id
-            res = Resource(user_id = user_id, title= title_inp, course = course_inp, type = type_inp, url = url_inp)
+            res = Resource(user_id = user_id, title= title_inp, course = course_inp, type = type_inp, semester = semester, url = url_inp)
             res.save()
             return redirect('/studyres/confirmation/')  
     else:
@@ -63,24 +66,36 @@ def saveResource(request):
     return render(request, "resources/post2.html", {"form": form})
 
 @login_required(login_url='/studyres/login')
-def queryResource(request):
+def home_view(request):
     if request.method == "POST":
         form = FilterForm(request.POST)
         if form.is_valid():
             course_inp = form.cleaned_data['course']
             type_inp = form.cleaned_data['type']
-            sort_inp = form.cleaned_data['sort']
+            up_inp = form.cleaned_data['upvotes']
+            date_inp = form.cleaned_data['date']
             result = Resource.objects
-            if course_inp is not None:
+            if course_inp is not '':
                 result = result.filter(course = course_inp)
-                if type_inp is not None:
-                    result = result.filter(type= type_inp)
-                    if sort_inp is not None:
-                        result = result.order_by('-upvotes')
-            return render(request, 'resources/result.html', {'data': list(result)})
+            if type_inp is not '':
+                result = result.filter(type= type_inp)
+            if up_inp is not '':
+                if up_inp == 'Descending':
+                    result = result.order_by('-upvotes')
+                else:
+                    result = result.order_by('upvotes')
+            if date_inp is not '':
+                if date_inp == 'Descending':
+                    result = result.order_by('-date')
+                else:
+                    result = result.order_by('date')
+            result = result.select_related('user')
+            return render(request, 'resources/result.html', {'data': result})
     else:
         form = FilterForm()
-    return render(request, "resources/post2.html", {"form": form})
+    allRes = Resource.objects.all()
+    allRes = allRes.select_related('user')
+    return render(request, "resources/home.html", {"form": form, "all": allRes})
 
 @login_required(login_url='/studyres/login')
 def confirmation(request):
