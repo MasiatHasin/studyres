@@ -47,21 +47,21 @@
                 <table class="table text-center">
                     <thead>
                       <tr>
-                        <th>Poster</th>
                         <th>Title</th>
                         <th>Course</th>
                         <th>Type</th>
                         <th>Upvotes</th>
+                        <th>Poster</th>
                       </tr>
                     </thead>
                     <tbody>
                         {% for i in all %}
                       <tr>
-                        <td>{{i.user}}</td>
-                        <td>{{i.title}}</td>
+                        <td><a href="{% url 'resource' id=i.sl_no %}">{{i.title}} </a></td>
                         <td>{{i.course}}</td>
                         <td>{{i.type}}</td>
                         <td>{{i.upvotes}}</td>
+                        <td>{{i.user}}</td>
                       </tr>
                       {% endfor %}
                     </tbody>

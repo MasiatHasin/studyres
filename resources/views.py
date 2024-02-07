@@ -8,8 +8,11 @@ from django.contrib.auth.decorators import login_required
 from django.template import loader
 
 from .models import Resource
+from .models import Upvotes
 from .forms import ResourceForm
 from .forms import FilterForm
+
+from django.db.models import Sum
 
 def register(request):
     if request.method == 'POST':
@@ -27,11 +30,9 @@ def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            # Log the user in
             from django.contrib.auth import login
             login(request, form.get_user())
-            # Redirect to a success page or home
-            return redirect('/studyres/')  # Update with your desired URL name
+            return redirect('/studyres/')
     else:
         form = AuthenticationForm()
 
@@ -40,16 +41,12 @@ def login_view(request):
 @login_required(login_url='/studyres/login')
 def logout_view(request):
     logout(request)
-    # Redirect to a success page.
     return redirect("/studyres/")
 
 @login_required(login_url='/studyres/login')
 def saveResource(request):
-    # if this is a POST request we need to process the form data
     if request.method == "POST":
-        # create a form instance and populate it with data from the request:
         form = ResourceForm(request.POST)
-        # check whether it's valid:
         if form.is_valid():
             title_inp = form.cleaned_data['title']
             course_inp = form.cleaned_data['course']
@@ -96,6 +93,45 @@ def home_view(request):
     allRes = Resource.objects.all()
     allRes = allRes.select_related('user')
     return render(request, "resources/home.html", {"form": form, "all": allRes})
+
+def profile_view(request):
+    current_user = request.user
+    id = current_user.id
+    ownPosts = Resource.objects.filter(user_id = id)
+    ownPosts = ownPosts.select_related('user')
+    totPosts = ownPosts.count()
+    agg = Resource.objects.aggregate(
+    totalUpvotes=Sum("upvotes", default = 0),
+    )
+    totUpvotes = agg["totalUpvotes"]
+    return render(request, "resources/profile.html", {"totalUpvotes": totUpvotes, "totalPosts": totPosts, "all": ownPosts})
+
+def resource_view(request, id):
+    current_user = request.user
+    uid = current_user.id
+    resource = Resource.objects.filter(sl_no = id).first()
+    resource.clicks += 1
+    resource.save()
+    votedRes = Upvotes.objects.filter(user_id= uid).filter(res_no = id)
+    count = votedRes.count()
+    if count < 1:
+        canVote = True
+    else:
+        canVote = False
+    return render(request, "resources/resource.html", {"res": resource, "id":id, "canVote": canVote})
+
+def upvote(request, id):
+    current_user = request.user
+    uid = current_user.id
+    resource = Upvotes.objects.filter(user_id= uid).filter(res_no = id)
+    count = resource.count()
+    if count<1:
+        resource = Resource.objects.filter(sl_no = id).first()
+        resource.upvotes += 1
+        resource.save()
+        upvote = Upvotes(res_no = id, user_id = id)
+        upvote.save()
+    return redirect('/studyres/resource/'+str(id))
 
 @login_required(login_url='/studyres/login')
 def confirmation(request):

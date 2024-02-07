@@ -1,0 +1,27 @@
+<!-- templates/registration/register.html -->
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Home - StudyRes{% endblock %}
+
+{% block header %}Home{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                Resource Information
+            </div>
+            <div class="card-body">
+                {{res.title}}
+            {% if canVote == True %}
+            </div>
+                <a href="{% url 'upvote' id=id %}">upvote</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
