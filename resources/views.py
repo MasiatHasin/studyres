@@ -57,10 +57,11 @@ def saveResource(request):
             user_id = current_user.id
             res = Resource(user_id = user_id, title= title_inp, course = course_inp, type = type_inp, semester = semester, url = url_inp)
             res.save()
-            return redirect('/studyres/confirmation/')  
+            form = ResourceForm()
+            return render(request, "resources/post.html", {"form": form, "message": "Successfully posted resource!"}) 
     else:
         form = ResourceForm()
-    return render(request, "resources/post2.html", {"form": form})
+    return render(request, "resources/post.html", {"form": form})
 
 @login_required(login_url='/studyres/login')
 def home_view(request):
@@ -71,6 +72,7 @@ def home_view(request):
             type_inp = form.cleaned_data['type']
             up_inp = form.cleaned_data['upvotes']
             date_inp = form.cleaned_data['date']
+            click_inp = form.cleaned_data['clicks']
             result = Resource.objects
             if course_inp is not '':
                 result = result.filter(course = course_inp)
@@ -86,6 +88,11 @@ def home_view(request):
                     result = result.order_by('-date')
                 else:
                     result = result.order_by('date')
+            if click_inp is not '':
+                if date_inp == 'Descending':
+                    result = result.order_by('-clicks')
+                else:
+                    result = result.order_by('clicks')
             result = result.select_related('user')
             return render(request, 'resources/result.html', {'data': result})
     else:
@@ -104,7 +111,11 @@ def profile_view(request):
     totalUpvotes=Sum("upvotes", default = 0),
     )
     totUpvotes = agg["totalUpvotes"]
-    return render(request, "resources/profile.html", {"totalUpvotes": totUpvotes, "totalPosts": totPosts, "all": ownPosts})
+    agg = Resource.objects.aggregate(
+    totalClicks=Sum("clicks", default = 0),
+    )
+    totClicks = agg['totalClicks']
+    return render(request, "resources/profile.html", {"totalUpvotes": totUpvotes, "totalPosts": totPosts, "totalClicks": totClicks, "all": ownPosts})
 
 def resource_view(request, id):
     current_user = request.user
@@ -129,9 +140,16 @@ def upvote(request, id):
         resource = Resource.objects.filter(sl_no = id).first()
         resource.upvotes += 1
         resource.save()
-        upvote = Upvotes(res_no = id, user_id = id)
+        upvote = Upvotes(res_no = id, user_id = uid)
         upvote.save()
     return redirect('/studyres/resource/'+str(id))
+
+def delete(request, id):
+    current_user = request.user
+    uid = current_user.id
+    resource = Resource.objects.filter(user_id= uid).filter(sl_no = id)
+    resource.delete()
+    return redirect('/studyres/profile/')
 
 @login_required(login_url='/studyres/login')
 def confirmation(request):

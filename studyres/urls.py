@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-from resources.models import Resource
+'''from resources.models import Resource
 from rest_framework import routers, serializers, viewsets
 
 class ResourceSerializer(serializers.ModelSerializer):
@@ -30,10 +30,10 @@ class ResViewSet(viewsets.ModelViewSet):
     serializer_class = ResourceSerializer
 
 router = routers.DefaultRouter()
-router.register(r'resources', ResViewSet)
+router.register(r'resources', ResViewSet)'''
 
 urlpatterns = [
-    path('', include(router.urls)),
+    #path('', include(router.urls)),
     path("studyres/", include("resources.urls")),
     path("admin/", admin.site.urls),
 ]

@@ -1,0 +1,48 @@
+<!-- templates/registration/register.html -->
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Home - StudyRes{% endblock %}
+
+{% block header %}Home{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                New Post
+            </div>
+            <div class="card-body">
+                <center>{{message}}</center>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-6">
+                            {{ form.title|as_crispy_field }}
+                        </div>
+                        <div class="col-6">
+                            {{ form.course|as_crispy_field }}
+                        </div>
+                        <div class="col-6">
+                            {{ form.semester|as_crispy_field }}
+                        </div>
+                        <div class="col-6">
+                            {{ form.type|as_crispy_field }}
+                        </div>
+                        <div class="col-6">
+                            {{ form.url|as_crispy_field }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="mt-2 btn btn-success">Post Resource</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

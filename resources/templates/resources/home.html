@@ -28,12 +28,15 @@
                             {{ form.upvotes|as_crispy_field }}
                         </div>
                         <div class="col-6">
+                            {{ form.clicks|as_crispy_field }}
+                        </div>
+                        <div class="col-6">
                             {{ form.date|as_crispy_field }}
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <button type="submit" class="mt-2 btn btn-success">Post Resource</button>
+                            <button type="submit" class="mt-2 btn btn-success">Filter!</button>
                         </div>
                     </div>
                 </form>

@@ -15,13 +15,62 @@
                 Resource Information
             </div>
             <div class="card-body">
-                {{res.title}}
-            {% if canVote == True %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <table class="table text-center">
+                            <tr>
+                                <td><b>Title</b></td>
+                                <td>{{res.title}}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Course</b></td>
+                                <td>{{res.course}}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Semester</b></td>
+                                <td>{{res.semester}}</td>
+                            </tr>
+                            <tr>
+                                <td><b>URL</b></td>
+                                <td><a href='{{res.url}}'>Click</a></td>
+                            </tr>
+                            <tr>
+                                <td><b>Date</b></td>
+                                <td>{{res.date}}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Upvotes</b></td>
+                                <td>{{res.upvotes}}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Clicks</b></td>
+                                <td>{{res.clicks}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <iframe height="285px" class="embed-responsive-item" src={{res.url}}/
+                                allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    {% if canVote == True %}
+                    <div class="col-md-12" style="text-align: center">
+                        <a href="{% url 'upvote' id=id %}"><button type="submit"
+                                class="btn btn-success btn-sm">Upvote</button></a>
+                    </div>
+                    {% else %}
+                    <div class="col-md-12" style="text-align: center">
+                        <button type="submit" class="btn btn-success btn-sm" disabled>Upvote</button>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
-                <a href="{% url 'upvote' id=id %}">upvote</a>
-            </div>
-            {% endif %}
         </div>
     </div>
+</div>
+</div>
 </div>
 {% endblock %}

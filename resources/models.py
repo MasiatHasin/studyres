@@ -14,6 +14,9 @@ class Resource(models.Model):
     clicks = models.IntegerField(default=0)
     upvotes = models.IntegerField(default=0)
 
+    def __str__(self):
+        print(self.title+" "+self.course+" "+self.user)
+
 class Upvotes(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     res_no = models.IntegerField()

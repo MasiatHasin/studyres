@@ -50,3 +50,4 @@ class FilterForm(forms.Form):
     course = forms.ChoiceField(choices=courses, required=False)
     upvotes = forms.ChoiceField(choices=sortList, required=False)
     date = forms.ChoiceField(choices=sortList, required=False)
+    clicks = forms.ChoiceField(choices=sortList, required=False)

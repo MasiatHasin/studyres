@@ -1,1 +1,12 @@
-test
+<!-- templates/registration/register.html -->
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Home - StudyRes{% endblock %}
+
+{% block header %}Home{% endblock %}
+
+{% block content %}
+{{res}}
+{% endblock %}

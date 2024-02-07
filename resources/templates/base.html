@@ -14,11 +14,13 @@
     <style>
         .card {
             border-color: #37373d;
+            font-family: Inconsolata !important;
         }
 
-        .card-body {
-            background-color: #1f1f1f;
+        .card-body, .form-control {
+            background-color: #212121;
             color: white;
+            font-family: Inconsolata !important;
         }
 
         table{
@@ -26,17 +28,30 @@
         }
 
         body {
-            background-color: #181818;
+            background-color: #121212;
             font-family: Inconsolata !important;
+        }
+
+        a{
+            color: white;
         }
 
         .navbar,
         .card-header {
-            background-color: #f9f2ed;
+            background-color: #417690;
+        }
+
+        a:hover{
+            color: #4ac1f7;
+        }
+
+        .nav-link{
+            color: white;
         }
 
         .card-header {
-            font-size: 14px;
+            font-size: 16px;
+            color: white;
         }
     </style>
 </head>
@@ -46,7 +61,7 @@
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg">
         <div class="container">
-            <a class="navbar-brand" href="#">KnoVault</a>
+            <a class="navbar-brand" href="/studyres/">KnoVault</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -55,7 +70,7 @@
                 <ul class="navbar-nav ms-auto align-items-center">
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href=""><button type="submit" class="mt-2 btn btn-success btn-sm">New
+                        <a class="nav-link" href="{% url 'post' %}"><button type="submit" class="mt-2 btn btn-success btn-sm">New
                                 Post</button></a>
                     </li>
                     <li class="nav-item">

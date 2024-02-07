@@ -12,13 +12,62 @@
     <div class="col-md-8">
         <div class="card">
             <div class="card-header">
-                {{ user}}'s Profile
+                {{ user}}'s Statistics
             </div>
             <div class="card-body">
-                Total Posts: {{totalPosts}}<br>
-                Total Upvotes: {{totalUpvotes}}
+                <div class="row justify-content-center">
+                    <div class="col-6">
+                        <table class="table">
+                            <tr>
+                                <td><b>Total Posts</b></td>
+                                <td>{{totalPosts}}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Total Upvotes</b></td>
+                                <td>{{totalUpvotes}}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Total Clicks</b></td>
+                                <td>{{totalClicks}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <hr>
             </div>
         </div>
+        <div class="card mt-4">
+            <div class="card-header">
+                {{user}}'s Resources
+            </div>
+            <div class="card-body">
+                <table class="table text-center">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Course</th>
+                            <th>Type</th>
+                            <th>Upvotes</th>
+                            <th>Poster</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in all %}
+                        <tr>
+                            <td><a href="{% url 'resource' id=i.sl_no %}">{{i.title}} </a></td>
+                            <td>{{i.course}}</td>
+                            <td>{{i.type}}</td>
+                            <td>{{i.upvotes}}</td>
+                            <td>{{i.user}}</td>
+                            <td><a href="{% url 'delete' id=i.sl_no %}">❌</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 </div>
 {% endblock %}
